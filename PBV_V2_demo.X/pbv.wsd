@@ -1,0 +1,30 @@
+@startuml
+
+[*] --> After_Reset_Init
+After_Reset_Init -> Self_Check 
+Self_Check -> Load_NVM_Settings : ok 
+Self_Check -> System_Fault : SysFaultDetected
+
+Load_NVM_Settings -> while_1_Sequencer
+Load_NVM_Settings -> System_Fault : SysFaultDetected
+
+
+while_1_Sequencer ->softstart_PWM
+
+softstart_PWM --> Init_Charger_Setup : Charger Mode
+softstart_PWM --> Init_Discharger_Setup : Discharger Mode
+
+Init_Charger_Setup ---> System_Fault : SysFaultDetected
+Init_Discharger_Setup ---> System_Fault : SysFaultDetected
+
+Init_Charger_Setup --> DCrange_OK : OK
+Init_Discharger_Setup --> DCrange_OK : OK
+
+DCrange_OK -> DAB_StandBy : OK
+
+DAB_StandBy -->SoftStart_DAB_Power_Flow:Start from PBV
+SoftStart_DAB_Power_Flow --> DAB_Regulator_Running : OK
+DAB_Regulator_Running   --> DAB_StandBy :END of Cycle
+
+DAB_Regulator_Running --> [*]
+@enduml
