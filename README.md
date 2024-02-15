@@ -34,9 +34,8 @@ insert picture of setup.
 ## Operation
 This code example is designed to work with UART and CAN.
 
+The framing/deframing of data happens in different abstraction layers. as can be seen in the pictures below. (app_pbv_can_uart) however on the api level they are the same.
 
-
-The sequence of sending and receiving. they are splited into CAN and UART. for simplicity, the layer encapsualting uart and can is called app_pbv_can_uart, representing files app_PBV_CAN and app_PBV_UART
 
 ### Application State machine
 #### Application State machine RX
