@@ -67,7 +67,7 @@ Steps:
 7.	You will see in the Output window your target device in the form of these two messages.
 o	Target voltage detected.
 o	Target device dsPIC33CK256MP506 found.
-8.	Go to the downloaded Folder for the demo, and select the hex file “PBV_V2_demo.X.production.hex”
+8.	Go to the downloaded Folder of the demo, and select the hex file in hex/PBV_V2_demo.X.hex
 9.	Program the device. 
 10.	Wait for Program/Verify Complete message. 
 11.	Disconnect programmer from the connector.
@@ -101,12 +101,12 @@ Here is the important files in the project along with brief description of the f
 ```
 PBV_V2_demo.X
  │   main.c                             --> System Initialize and invokes the scheduler
- │   main_tasks.c                       --> All processes are defined as tasks, and invoked in main_tasks.c
+ │   main_tasks.c                       --> All processes are defined as tasks, and invoked in main_tasks.
  │
  ├───mcc_generated_files                --> These drivers are generated from MCC. Each folder represents a peripheral
  │   ├───can
  │   ├───crc
- │   ├───system                         --> All system settings including oscillator
+ │   ├───system                         --> All system settings including clock settings and pinout macros
  │   ├───timer
  │   └───uart
  └───sources                            --> All the files on top of MCC drivers/Peripheral Initialization
@@ -193,7 +193,6 @@ All the files in app folder repesent different abstraction layers and files used
     │       app_PBV_interface.h
     │       app_PBV_UART.c
     │       app_PBV_UART.h
-
 ```
 #### App_PBV_Demo_Frame_Map. 
 This is the main application file. Here there are tasks that run at different frequencies checking for any received messages and triggering sending of messages.
@@ -305,7 +304,7 @@ These are the state machines for main application transmitting and receiving.
 <div>
   <p>
     <img src="images/states_rx.png" alt="" width="900" >
-    <figcaption style="font-style: italic;">Application State Machine Receiving a PBV frame over UART</figcaption>
+    <figcaption style="font-style: italic;">Application State Machine: Receiving a PBV frame</figcaption>
   </p>
 </div> 
 
@@ -314,7 +313,7 @@ These are the state machines for main application transmitting and receiving.
 <div>
   <p>
     <img src="images/states_tx.png" alt="" width="900" >
-    <figcaption style="font-style: italic;">Application State Machine Sending a PBV frame over UART</figcaption>
+    <figcaption style="font-style: italic;">Application State Machine: Sending a PBV frame</figcaption>
   </p>
 </div> 
 
@@ -327,7 +326,7 @@ As UART framing and deframing is done in seperate state machines, these two are 
 <div>
   <p>
     <img src="images/statemachine_uart_rx.png" alt="" width="800" >
-    <figcaption style="font-style: italic;">UART State Machine Receiving a PBV frame over UART</figcaption>
+    <figcaption style="font-style: italic;">UART State Machine: Receiving a PBV frame</figcaption>
   </p>
 </div> 
 
@@ -335,6 +334,6 @@ As UART framing and deframing is done in seperate state machines, these two are 
 <div>
   <p>
     <img src="images/statemachine_uart_tx.png" alt="" width="800" >
-    <figcaption style="font-style: italic;">UART State Machine Sending a PBV frame over UART</figcaption>
+    <figcaption style="font-style: italic;">UART State Machine: Sending a PBV frame</figcaption>
   </p>
 </div> 
