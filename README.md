@@ -46,7 +46,16 @@ Steps:
 - Insert can transciever click board on J10 connector on the Digital Power Development Board.
 - Connect the CAN FD dongle using a DB9 cable to the click board.
 
+<!---
 ![Setup](images/schematic.png)  
+-->
+
+<div>
+  <p>
+    <img src="images/schematic.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Demo Hardware Setup</figcaption>
+  </p>
+</div>
 
 ### Programming
 1.	Open MPLAB X IPE
@@ -64,32 +73,46 @@ o	Target device dsPIC33CK256MP506 found.
 11.	Disconnect programmer from the connector.
 
 ### Opening the GUI
-If the Power Board Visualizer is not installed, Install the Power Board Visualizer. The setup wizard will guide through the process of installation.
+If the Power Board Visualizer is not installed, Install the Power Board Visualizer. The setup wizard will guide through the process of installation.  
 Navigate to the downloaded project, and open the file gui\Power Board Visualizer Demo.xml
-![Start up Window](images/startup.png) 
-### Connect and receive data
-Click on COM? button on the bottom, and the connected devices will be listed. Select the one that is connected with your system, and the data should appear.
-![Port List](images/Port_List.png) 
+ 
+
+<div>
+  <p>
+    <img src="images/startup.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Power Board Visualizer Startup</figcaption>
+  </p>
+</div>
+
+### Connect and Receive demo
+Click on COM? button on the bottom, and the connected devices will be listed. Select the one that is connected with your system, and the data should appear. 
+
+<div>
+  <p>
+    <img src="images/Port_List.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Port Lists</figcaption>
+  </p>
+</div>
 
 ## Project
 This section aims to describe the provided code example along with guiding the user on how to setup the peripherals using MCC
 ### Directory Structure
-Here is the important files in the project along with some description of the files
+Here is the important files in the project along with brief description of the files
 ```
 PBV_V2_demo.X
- │   main.c                         --> System Initialize and invokes the scheduler
- │   main_tasks.c                   --> All the tasks in the system
+ │   main.c                             --> System Initialize and invokes the scheduler
+ │   main_tasks.c                       --> All processes are defined as tasks, and invoked in main_tasks.c
  │
- ├───mcc_generated_files            --> These drivers are generated from MCC. Each folder represents a peripheral
+ ├───mcc_generated_files                --> These drivers are generated from MCC. Each folder represents a peripheral
  │   ├───can
  │   ├───crc
- │   ├───system                     --> All system settings including oscillator
+ │   ├───system                         --> All system settings including oscillator
  │   ├───timer
  │   └───uart
- └───sources                        --> All the files on top of MCC
+ └───sources                            --> All the files on top of MCC drivers/Peripheral Initialization
      │   project_settings.h
      │
-     ├───app
+     ├───app                            --> All the files for PBV commuincation 
      │       app_PBV_CAN.c
      │       app_PBV_CAN.h
      │       app_PBV_config.c
@@ -101,14 +124,14 @@ PBV_V2_demo.X
      │       app_PBV_UART.c
      │       app_PBV_UART.h
      │
-     ├───config
-     │       config.h
+     ├───config                         
+     │       config.h                    --> The file where the CAN-FD or UART physical Layer can be selected
      │
      ├───device
      │       dev_led.c
      │       dev_led.h
      │
-     └───os
+     └───os                             --> A simple scheduler. All processes are defined as tasks, and invoked in main_tasks.c
              os.c
              os.h
              os_reset.c
@@ -124,28 +147,39 @@ PBV_V2_demo.X
              os_watchdog.h
              readme.md
 ```
-### MCC Setup
+### MCC/Device Peripheral Setup
 
-Open the project in MPLAB X IDE. Click on MCC button on the top Right Corner. And then you will be greeted by the following screen.
-![Port List](images/MCC_startup.png)
-Click on each block and you will see a graphical intergface on how to setup the peripheral. Pin view in the bottom shows the pin mapping. Many peripherals on the dsPIC are connected to Peripheral Pin Select(PPS) Module. PPS allows the user to connect peripheral to any device pin.
+Open the project in MPLAB X IDE. Click on MCC button on the top Right Corner. And then you will be greeted by the following screen.  
+<!---
+![MCC startup](images/MCC_startup.png)
+-->
+
+<div>
+  <p>
+    <img src="images/MCC_startup.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">MCC GUI for Peripheral Configuration</figcaption>
+  </p>
+</div>
+
+Click on each block and you will see a graphical interface on how to setup the peripheral. Pin view in the bottom shows the pin mapping. Many peripherals on the dsPIC are connected to Peripheral Pin Select(PPS) Module. PPS allows the user to connect peripheral to any device pin.
 Click on each Device name and the associated PLIB to see the available configurable options.
 
-### OS
-The code example is built upon a operating system. This operating system takes in a system tick of 100us, and defines each process as Tasks. All of the tasks are called in main_tasks.c
+### OS/Scheduler
+The code example is built upon a simple operating system. This operating system takes in a system tick of 100us, and defines each process as Tasks. All of the tasks are called in main_tasks.c
 
 ### Switching from UART to CAN-FD
-This code example is designed to work with UART and CAN-FD. and the option to select the underlying phsical layer is selected at compile time.  By default the code example works with UART. Go to config/config.h and change the PBV_CANFD to 1 and PBV_UART to 0, and build and compile the code. 
+This code example is designed to work with UART and CAN-FD. and the option to select the underlying phsical layer is selected at compile time.  By default the code example works with UART. Go to config/config.h and change the PBV_CANFD to 1 and PBV_UART to 0, and build and recompile the code. 
+
 ```
 // PBV working with CAN OR UART
 #define PBV_UART        1 
 #define PBV_CANFD       0
 ```
-The same Api works regardless of the underlying phsyical layer. The App_PBV_Demo_Frame_Map provides an example on how the driver can be used to map and unframe the data.
+The same Api works regardless of the underlying phsyical layer. The App_PBV_Demo_Frame_Map provides an example on how the driver can be used to map to a PBV frame and unframe the data.
 
-### Code Explaination
+### Power Board Visualizer Demo Code and Files
 
-All the files in app folder repesent different abstraction layers and files 
+All the files in app folder repesent different abstraction layers and files used in PBV transmission and receive
 
 ```
     ├───app
@@ -174,29 +208,133 @@ These implement the PBV state machine of RX and TX, as well as link data that is
 This is where the framing/deframing and transmission happens for UART frames. The fundamental difference between this and CAN-FD frames is that CAN-FD defines a strategy for framing and deframing data, and PBV follows that strategy. UART is a point to point byte by byte transfer of data. To build a frame on top of it, another layer is needed where the data is framed/deframed and trasnmitted. It defines an additional statemachine
 
 #### app_PBV_CAN. 
-This is a parallel file to app_PBV_UART. This abstracts away the MCC driver api. 
+This is a parallel file to app_PBV_UART. This abstracts the MCC driver api. 
 
+How these files stack up can be explained by following abstraction layers
 
-### Application State machine
-#### Application State machine RX
-![Application_RX](images/states_rx.png)  
-#### Application State machine TX
-![Application_TX](images/states_tx.png)
+<div>
+  <p>
+    <img src="images/layers.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Abstraction Layers along with associated file names</figcaption>
+  </p>
+</div>
+
+### Sequence Diagrams
+
+The ineraction of these files as well the sequence of events in sending and receving messages can be seen in these sequence diagrams. app_PBV_CAN_UART represent app_PBV_CAN and app_PBV_UART as one entity in the diagrams to maintain uniformity.
 
 ### CAN-FD RX and TX
 #### CAN Sequence RX
-![RX_CAN](images/rx_can.png)
+
+<div>
+  <p>
+    <img src="images/rx_can.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Sequence of events in Recieving a PBV frame over CAN</figcaption>
+  </p>
+</div>
+
+| Event   | Explaination   |
+| :---:   | :--- |
+| 1.1     | The main applications signals app PBV interface to check if there are any new messages   |
+| 1.2     | app PBV interface triggers app PBV CAN to check if there are any messages                |
+| 1.3     | app PBV CAN calls on the lower level mcc drivers to check if any new messages are received|
+| 1.4-1.5 | as no new messages are received the information is propogated back|
+| 1.6     | Power Board Visualizer sends a message to the embedded system|
+| 1.7     | As the message is a standard CAN-FD frame, the deframing and processing is done at the mcc layer. The message is deframed and stored as bytes at mcc layer|
+| 1.8-1.9  | The interface layer checks if there are any new messages |
+| 1.10-1.11     | the message is linked to the main application object|
+| 1.12-1.14     | the main application can then read message from the linked message and do further processing|
+
 #### CAN Sequence TX
-![TX_CAN](images/tx_can.png)
+<div>
+  <p>
+    <img src="images/tx_can.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Sequence of events in Sending a PBV frame over CAN</figcaption>
+  </p>
+</div>
+
+| Event   | Explaination   |
+| :---:   | :--- |
+| 2.1-2.3     | The main applications signals app PBV interface that there is a message ready to be sent  |
+| 2.4-2.5    | mcc layer frames and transmits data           |
+| 2.6-2.7    | transmit status is propogated back to interface layer|
+| 2.8-2.9| message sent confirmation from the main application layer|
+
 
 ### UART RX and TX
 #### UART Sequence RX
-![RX_UART](images/rx_uart.png)
+<div>
+  <p>
+    <img src="images/rx_uart.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Sequence of events in Sending a PBV frame over UART</figcaption>
+  </p>
+</div>
+
+| Event   | Explaination   |
+| :---:   | :--- |
+| 3.1     | The main applications signals app PBV interface to check if there are any new messages   |
+| 3.2     | app PBV interface triggers app PBV UART to check if there are any messages                |
+| 3.3     | app PBV UART calls on the lower level mcc drivers to check if any new bytes that are received|
+| 3.4-3.5 | as no new messages are received the information is propogated back|
+| 3.6     | Power Board Visualizer sends a message to the embedded system|
+| 3.7     | the app PBV UART is informed that there is a frame that is to be processed|
+| 3.8     | mcc layers stores raw bytes as per the allocated buffer|
+| 3.9-12  | app PBV UART reads frame, deframes it, and stores the data 
+| 3.13-3.17     | the main application can then read message from the linked message and do further processing. the message is linked to the main application object after successful read|
+
 #### UART Sequence TX
-![TX_UART](images/tx_uart.png)
+<div>
+  <p>
+    <img src="images/tx_uart.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Sequence of events in Sending a PBV frame over UART</figcaption>
+  </p>
+</div>
+
+| Event   | Explaination   |
+| :---:   | :--- |
+| 4.1-4.2     | The main applications signals app PBV interface that there is a message ready to be sent  |
+| 4.3    | app PBV UART frames and passes partial frame to mcc|
+| 4.4  | mcc transmits the frame piecemeal|
+| 4.6-4.8| message sent confirmation from the main application layer|
+
+### Application State machine
+
+These are the state machines for main application transmitting and receiving.
+
+#### Application State machine RX
+<div>
+  <p>
+    <img src="images/states_rx.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Application State Machine Receiving a PBV frame over UART</figcaption>
+  </p>
+</div> 
+
+#### Application State machine TX
+
+<div>
+  <p>
+    <img src="images/states_tx.png" alt="" width="900" >
+    <figcaption style="font-style: italic;">Application State Machine Sending a PBV frame over UART</figcaption>
+  </p>
+</div> 
+
 
 #### Framing and Deframing State-Machine for UART
+
+As UART framing and deframing is done in seperate state machines, these two are documented. 
+
 #### Framing statemachine UART RX
-![RX_UART](images/statemachine_uart_rx.png)
+<div>
+  <p>
+    <img src="images/statemachine_uart_rx.png" alt="" width="800" >
+    <figcaption style="font-style: italic;">UART State Machine Receiving a PBV frame over UART</figcaption>
+  </p>
+</div> 
+
 #### Framing statemachine UART TX
-![TX_UART](images/statemachine_uart_tx.png)
+<div>
+  <p>
+    <img src="images/statemachine_uart_tx.png" alt="" width="800" >
+    <figcaption style="font-style: italic;">UART State Machine Sending a PBV frame over UART</figcaption>
+  </p>
+</div> 
