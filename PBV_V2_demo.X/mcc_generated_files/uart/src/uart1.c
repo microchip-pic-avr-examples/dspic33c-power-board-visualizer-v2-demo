@@ -7,15 +7,15 @@
  *  
  * @brief       This is the generated driver source file for the UART1 driver
  *            
- * @skipline @version     Firmware Driver Version 1.6.1
+ * @skipline @version     Firmware Driver Version 1.7.0
  *
- * @skipline @version     PLIB Version 1.4.1
+ * @skipline @version     PLIB Version 1.5.0
  *
  * @skipline    Device : dsPIC33CK256MP506
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2024] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -66,6 +66,8 @@ const struct UART_INTERFACE UART1_Drv = {
     .IsTxDone = &UART1_IsTxDone,
     .TransmitEnable = &UART1_TransmitEnable,
     .TransmitDisable = &UART1_TransmitDisable,
+    .TransmitInterruptEnable = NULL,
+    .TransmitInterruptDisable = NULL,
     .AutoBaudSet = &UART1_AutoBaudSet,
     .AutoBaudQuery = &UART1_AutoBaudQuery,
     .AutoBaudEventEnableGet = &UART1_AutoBaudEventEnableGet,
@@ -107,8 +109,8 @@ static union
  @brief    Defines the object required for the status of the queue
 */
 static uint8_t * volatile rxTail;
-static uint8_t *rxHead;
-static uint8_t *txTail;
+static uint8_t * volatile rxHead;
+static uint8_t * volatile txTail;
 static uint8_t * volatile txHead;
 static bool volatile rxOverflowed;
 
@@ -155,8 +157,8 @@ void UART1_Initialize(void)
     U1MODEH = 0x800;
     // OERIE ; RXBKIF ; RXBKIE ; ABDOVF ; OERR ; TXCIE ; TXCIF ; FERIE ; TXMTIE ; ABDOVE ; CERIE ; CERIF ; PERIE ; 
     U1STA = 0x80;
-    // URXISEL ; UTXBE ; UTXISEL TX_SEVEN_WORDS; URXBE ; STPMD ; TXWRE ; 
-    U1STAH = 0x702E;
+    // URXISEL ; UTXBE ; UTXISEL TX_BUF_EMPTY; URXBE ; STPMD ; TXWRE ; 
+    U1STAH = 0x2E;
     // BaudRate 115207.37; Frequency 100000000 Hz; BRG 868; 
     U1BRG = 0x364;
     // BRG 0; 
@@ -245,29 +247,21 @@ uint8_t UART1_Read(void)
 
 void UART1_Write(uint8_t byte)
 {
-    // if software buffer is empty and hardware FIFO is not full write to TXREG directly
-    if((softwareBufferEmpty == true) && (U1STAHbits.UTXBF == 0))
+    while(UART1_IsTxReady() == 0)
     {
-        U1TXREG = byte;
     }
-    else
+
+    *txTail = byte;
+
+    txTail++;
+    
+    if (txTail == &txQueue[UART1_CONFIG_TX_BYTEQ_LENGTH])
     {
-        while(UART1_IsTxReady() == 0)
-        {
-        }
-
-        *txTail = byte;
-
-        txTail++;
-        
-        if (txTail == &txQueue[UART1_CONFIG_TX_BYTEQ_LENGTH])
-        {
-            txTail = txQueue;
-        }
-
-        IEC0bits.U1TXIE = 1;
-        softwareBufferEmpty = false;
+        txTail = txQueue;
     }
+
+    IEC0bits.U1TXIE = 1;
+    softwareBufferEmpty = false;
 }
 
 bool UART1_IsRxReady(void)
@@ -313,6 +307,7 @@ void UART1_TransmitDisable(void)
 {
     U1MODEbits.UTXEN = 0;
 }
+
 
 void UART1_AutoBaudSet(bool enable)
 {
@@ -485,12 +480,15 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _U1TXInterrupt(void)
 
     if(txHead == txTail)
     {
+        if(NULL != UART1_TxCompleteHandler)
+            {
+                (*UART1_TxCompleteHandler)();
+            }
         IEC0bits.U1TXIE = 0;
         softwareBufferEmpty = true;
     }
     else
     {
-        IFS0bits.U1TXIF = 0;
 
         while(!(U1STAHbits.UTXBF == 1))
         {
@@ -505,10 +503,6 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _U1TXInterrupt(void)
             // Are we empty?
             if(txHead == txTail)
             {
-				if(NULL != UART1_TxCompleteHandler)
-					{
-						(*UART1_TxCompleteHandler)();
-					}
                 break;
             }
         }

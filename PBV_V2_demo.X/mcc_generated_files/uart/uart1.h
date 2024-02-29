@@ -7,15 +7,15 @@
  *            
  * @brief     This is the generated driver header file for the UART1 driver
  *            
- * @skipline @version   Firmware Driver Version 1.6.1
+ * @skipline @version   Firmware Driver Version 1.7.0
  *
- * @skipline @version   PLIB Version 1.4.1
+ * @skipline @version   PLIB Version 1.5.0
  *            
  * @skipline  Device : dsPIC33CK256MP506
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2024] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -280,6 +280,7 @@ void UART1_TransmitEnable(void);
  */
 void UART1_TransmitDisable(void);
 
+
 /**
  * @ingroup  uartdriver
  * @brief    Enables or disables UART1 Auto-Baud detection
@@ -377,7 +378,7 @@ void UART1_RxCompleteCallback(void);
  * @param[in][out]  Address of the callback routine
  * @return          none
  */
-void __attribute__((deprecated("\nThis will be removed in future MCC releases."))) UART1_TxCompleteCallbackRegister(void (*handler)(void));
+void UART1_TxCompleteCallbackRegister(void (*handler)(void));
 
 /**
  * @ingroup  uartdriver
@@ -389,7 +390,7 @@ void __attribute__((deprecated("\nThis will be removed in future MCC releases.")
  * @note            This callback is triggerred if there is data in the software buffer and there is atleast 
  *                  one byte space in hardware transmit FIFO 
  */
-void __attribute__((deprecated("\nThis will be removed in future MCC releases."))) UART1_TxCompleteCallback(void);
+void UART1_TxCompleteCallback(void);
 
 /**
  * @ingroup         uartdriver
