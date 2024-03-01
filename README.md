@@ -67,7 +67,7 @@ Steps:
 7.	You will see in the Output window your target device in the form of these two messages.
 o	Target voltage detected.
 o	Target device dsPIC33CK256MP506 found.
-8.	Go to the downloaded Folder of the demo, and select the hex file in hex/PBV_V2_demo.X.hex
+8.	Go to the downloaded Folder of the demo, and select the PBV_V2_demo.X\Hex File\PBV_V2_demo.X.hex
 9.	Program the device. 
 10.	Wait for Program/Verify Complete message. 
 11.	Disconnect programmer from the connector.
