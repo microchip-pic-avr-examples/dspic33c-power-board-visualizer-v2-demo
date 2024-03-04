@@ -294,7 +294,7 @@
     </StatusGroups>
     <SendRawDataButtons>
       <SendRawDataButton>
-        <Name>LED Red ON</Name>
+        <Name>LED Red On</Name>
         <Enabled>true</Enabled>
         <RawDataVisible>true</RawDataVisible>
         <Data>02 02 00 04 00 00 00 01</Data>
@@ -308,7 +308,7 @@
         <PageName>A new page</PageName>
       </SendRawDataButton>
       <SendRawDataButton>
-        <Name>LED Green ON</Name>
+        <Name>LED Green On</Name>
         <Enabled>true</Enabled>
         <RawDataVisible>true</RawDataVisible>
         <Data>02 02 00 04 00 01 00 01</Data>

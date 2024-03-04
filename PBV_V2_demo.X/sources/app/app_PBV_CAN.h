@@ -34,9 +34,9 @@
 
 // Public Functions
 void PBV_CAN_Init(PBV_Datatype_TX_t * boardToPBV, PBV_Datatype_TX_t * boardToPBVAscii, PBV_Datatype_RX_t *pbvToBoard);
-uint8_t PBV_CAN_Receive_from_GUI();
-uint8_t PBV_CAN_Transmit_to_GUI();
-uint8_t PBV_CAN_Transmit_Ascii_to_GUI();
+uint8_t PBV_CAN_Receive_from_GUI(void);
+uint8_t PBV_CAN_Transmit_to_GUI(void);
+uint8_t PBV_CAN_Transmit_Ascii_to_GUI(void);
 void PBV_CAN_Reinit(PBV_Datatype_TX_t * ptr);
 void PBV_CAN_Link_Data_TX(PBV_Datatype_TX_t * ptr);
 void PBV_CAN_Link_Data_RX(PBV_Datatype_RX_t * ptr);

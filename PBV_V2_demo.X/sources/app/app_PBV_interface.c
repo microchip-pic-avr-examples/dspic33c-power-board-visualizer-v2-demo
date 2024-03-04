@@ -261,7 +261,7 @@ static void app_PBV_Task(void)
  *  task that is to be executed every 100 ms (CAN msg) can work on slower task as 
  * mcc implements a queuing buffer
  **********************************************************************************/
-void app_PBV_Task_10ms()
+void app_PBV_Task_10ms(void)
 {
 #if PBV_CANFD
     app_PBV_Task();
@@ -278,7 +278,7 @@ void app_PBV_Task_10ms()
  *  task that is to be executed every 100 us (UART) for executing UART State machine.
  * calling task has to ensure that the system is not overloaded 
  **********************************************************************************/
-void app_PBV_Task_100us()
+void app_PBV_Task_100us(void)
 {
 #if PBV_UART
     app_PBV_Task();

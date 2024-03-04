@@ -80,13 +80,13 @@ void PBV_CAN_Init(PBV_Datatype_TX_t* Board_To_PBV, PBV_Datatype_TX_t* Board_To_P
 /*********************************************************************************
  * @ingroup PBV_CAN 
  * @fn      PBV_CAN_Receive_from_GUI
- * @param
+ * @param   void
  * @brief   
  * @return  int (0 on successful, 1 on unsuccessful)
  * @details checks the queue and if a message is received then links the data pointer to can object
  **********************************************************************************/
 
-uint8_t PBV_CAN_Receive_from_GUI()
+uint8_t PBV_CAN_Receive_from_GUI(void)
 {
     if (CAN1_ReceivedMessageCountGet() > 0)
         {
@@ -105,7 +105,7 @@ uint8_t PBV_CAN_Receive_from_GUI()
  * @details transmits the Ascii msg to PBV 
  **********************************************************************************/
 
-uint8_t PBV_CAN_Transmit_Ascii_to_GUI()
+uint8_t PBV_CAN_Transmit_Ascii_to_GUI(void)
 {
     if( CAN1_Transmit(CAN1_TXQ, &PBV_CAN_Object_ASCII ) != CAN_TX_MSG_REQUEST_SUCCESS) 
         return PBV_MESSAGE_TX_ERROR; 
@@ -122,7 +122,7 @@ uint8_t PBV_CAN_Transmit_Ascii_to_GUI()
  * @details this function sends the message on CAN1 Transmit Queue. TODO: make this portable to other transmit queues. 
  **********************************************************************************/
 
-uint8_t PBV_CAN_Transmit_to_GUI()
+uint8_t PBV_CAN_Transmit_to_GUI(void)
 {
     if( CAN1_Transmit(CAN1_TXQ, &PBV_CAN_Object_TX ) != CAN_TX_MSG_REQUEST_SUCCESS) 
         return PBV_MESSAGE_TX_ERROR; 
@@ -234,3 +234,7 @@ void PBV_CAN_Link_Data_RX(PBV_Datatype_RX_t * ptr){
         }
     }
 }
+
+/*******************************************************************************
+ * end of file
+ *******************************************************************************/

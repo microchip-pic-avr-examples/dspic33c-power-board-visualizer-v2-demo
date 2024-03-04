@@ -216,7 +216,7 @@ void PBV_UART_Init(PBV_Datatype_TX_t * Board_To_PBV, PBV_Datatype_TX_t * Board_T
  * @details implements the state machine for message RX. maintains internal state machine states as defined in RCV_<STATES>
  **********************************************************************************/
 
-uint8_t PBV_UART_Receive_from_GUI()
+uint8_t PBV_UART_Receive_from_GUI(void)
 { 
     static uint16_t rcv_data_index = 0;
     static uint16_t rcv_CRC = 0;
@@ -342,13 +342,13 @@ uint8_t PBV_UART_Receive_from_GUI()
 /*********************************************************************************
  * @ingroup  
  * @fn      PBV_UART_Transmit_Ascii_to_GUI
- * @param
+ * @param   none
  * @brief   
  * @return  int
  * @details implements the state machine for ascii  TX 
  **********************************************************************************/
 
-uint8_t PBV_UART_Transmit_Ascii_to_GUI()
+uint8_t PBV_UART_Transmit_Ascii_to_GUI(void)
 {
     uint8_t temp;
     if (uartActiveTx == true)
@@ -427,13 +427,13 @@ uint8_t PBV_UART_Transmit_Ascii_to_GUI()
 /*********************************************************************************
  * @ingroup  
  * @fn      PBV_UART_Transmit_to_GUI
- * @param
+ * @param   none
  * @brief   
- * @return  int
+ * @return  uint8_t  enum PBV_MESSAGE_TX_STATE
  * @details implements the state machine for numerical TX 
  **********************************************************************************/
 
-uint8_t PBV_UART_Transmit_to_GUI()
+uint8_t PBV_UART_Transmit_to_GUI(void)
 {
     uint16_t temp;
     if (uartActiveTxAscii == true)
@@ -484,10 +484,10 @@ uint8_t PBV_UART_Transmit_to_GUI()
             }
         }
         return PBV_MESSAGE_TRANSMITTING;
-    case 3: //calculate CRC make end header
+    case 3: // make end header
         //IMPORTANT calculate crc before reusing PBV_HEADER
         PBV_UART_Object_TX.PBV_Header[0] = 0; //
-        PBV_UART_Object_TX.PBV_Header[1] = 0; //add crc
+        PBV_UART_Object_TX.PBV_Header[1] = 0; //could add CRC
         PBV_UART_Object_TX.PBV_Header[2] = PBV_END_OF_FRAME;
         PBV_UART_Object_TX.UART_Frame_State = 4;
         return PBV_MESSAGE_TRANSMITTING;
@@ -512,7 +512,7 @@ uint8_t PBV_UART_Transmit_to_GUI()
 /*********************************************************************************
  * @ingroup PBV_UART
  * @fn      PBV_UART_Reniit
- * @param   
+ * @param   void
  * @brief   
  * @return  
  * @details reinitializes the UART object with new can id. 
